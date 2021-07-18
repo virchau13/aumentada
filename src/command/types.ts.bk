@@ -1,0 +1,53 @@
+export function inferCmd<Ts extends ArgType[]>(
+    cmd: StandaloneCmd<Ts>
+): StandaloneCmd<Ts> {
+    return cmd;
+}
+
+export function inferArgs<Ts extends ArgType[], As extends Args<Ts>>(
+    args: Readonly<As>
+): Readonly<As> {
+    return args;
+};
+
+export type Command<Ts extends any[]> = Ts extends ArgType[] ? StandaloneCmd<Ts> : SubCmdGroup<Ts>;
+
+type SubCmdGroup<A extends any[][]> = {
+    sub: {
+        [I in keyof A]: I extends number ? Command<A[I]> : never;
+    } & { length: A['length'] };
+} & NameDesc;
+
+type StandaloneCmd<Ts extends ArgType[]> = {
+    readonly args: Args<Ts>,
+    func: CmdFunc<ArgTypesToTypes<Ts>>
+} & NameDesc;
+
+type Arg<T extends ArgType> = Readonly<{
+    readonly type: T[0]
+    readonly required?: T[1]
+} & NameDesc>;
+
+type ArgTypeName = 'string' | 'integer' /* TODO */;
+
+type ArgTypesToTypes<Ts extends ArgType[]> = {
+    [I in keyof Ts]: Ts[I] extends ArgType ? ArgTypeToType<Ts[I]> : never;
+} & { length: Ts['length'] };
+
+type Args<T extends ArgType[]> = {
+    [I in keyof T]: T[I] extends ArgType ? Arg<T[I]> : never;
+} & { length: T['length'] };
+
+type ArgTypeToType<T extends ArgType> = 
+    T[0] extends 'string' ? string : 
+    T[0] extends 'integer' ? number :
+    never;
+
+type CmdFunc<T extends any[]> = (t: T) => Promise<void>;
+
+type ArgType = [ArgTypeName, boolean];
+
+type NameDesc = Readonly<{
+    readonly name: string,
+    readonly desc: string
+}>;
