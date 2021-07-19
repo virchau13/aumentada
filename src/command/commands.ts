@@ -30,6 +30,54 @@ in Earth as it is in the Machine.
 
 export const commands: Command[] = [
     {
+        // TODO make this only enabled via Hexular
+        name: "exec",
+        desc: "Executes JS code",
+        args: [
+            {
+                type: "STRING",
+                name: "code",
+                desc: "code",
+            },
+        ],
+        func: async (interaction, [code]: [string]) => {
+            if (interaction.user.id === "205898019839803392") {
+                // We're probably going to need to wait a bit.
+                await interaction.defer({ ephemeral: true });
+                try {
+                    let constructedReply = "";
+                    const AsyncFunction = Object.getPrototypeOf(
+                        async function () {}
+                    ).constructor;
+                    let f = new AsyncFunction("it", "log", "send", code);
+                    let log = async (s: any) => {
+                        constructedReply +=
+                            "```" +
+                            s.toString().replace(/`/gm, "`\u200b") +
+                            "```";
+                        await interaction.editReply(constructedReply);
+                    };
+                    let send = async (s: any) => {
+                        await interaction.channel?.send(s.toString());
+                    };
+                    await f(interaction, log, send).then(() => {
+                        return interaction.editReply(
+                            constructedReply + "\nExecution terminated."
+                        );
+                    });
+                } catch (e) {
+                    await interaction.editReply(
+                        "Error! ```" +
+                            e.toString().replace(/`/gm, "`\u200b") +
+                            "```"
+                    );
+                }
+            } else {
+                await interaction.reply("No perms for you! :D");
+            }
+        },
+    },
+    {
         name: "think",
         desc: "Makes Aumentada think",
         args: [],
@@ -77,8 +125,9 @@ export const commands: Command[] = [
                     {
                         name: "Total memory",
                         value:
-                            Math.round(totalMemBytes / (1024 * 1024)).toString() +
-                            "MB",
+                            Math.round(
+                                totalMemBytes / (1024 * 1024)
+                            ).toString() + "MB",
                         inline: true,
                     },
                     {
