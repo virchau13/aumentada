@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import { Arg, Command, isStandaloneCmd } from "./types";
 import { commands } from "./commands";
-import { log, warn } from "../util";
+import { warn } from "../util";
 
 function translateCommand(cmd: Command): Discord.ApplicationCommandData {
     if (isStandaloneCmd(cmd)) {

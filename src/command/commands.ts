@@ -162,7 +162,6 @@ export const commands: Command[] = [
             if (avatarURL) {
                 embed = embed.setThumbnail(avatarURL);
             }
-            // .setFooter('Some footer text here', 'https://i.imgur.com/wSTFkRM.png');
             interaction.reply({
                 content: " ",
                 embeds: [embed],
