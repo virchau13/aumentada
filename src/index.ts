@@ -1,7 +1,7 @@
 import "dotenv/config";
 import * as Discord from "discord.js";
 import { registerCmds } from "./command/register";
-import { log } from "./util";
+import { log, error } from "./util";
 
 const client = new Discord.Client({
     intents: [
@@ -28,6 +28,10 @@ client.on("ready", async () => {
     await registerCmds(client).then(() => {
         log("Commands registered");
     });
+});
+
+client.on("error", async err => {
+    error("Error event: " + err.toString());
 });
 
 client.login(process.env.BOT_TOKEN);

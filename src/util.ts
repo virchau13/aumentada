@@ -7,3 +7,7 @@ export function log(s: string) {
 export function warn(s: string) {
     console.log(chalk.yellow("[WARNING]") + " " + s);
 }
+
+export function error(s: string) {
+    console.log(chalk.red("[ERROR]") + " " + s);
+}
