@@ -60,8 +60,6 @@ async function handleCmdInvoke(
     interaction: Discord.CommandInteraction,
     options: DiscordOptionMap | undefined
 ) {
-    // console.log(cmd.name);
-    // console.dir(options, { depth: null });
     if (isStandaloneCmd(cmd)) {
         let args = parseArgs(cmd.args, options);
         await cmd.func(interaction, args);
