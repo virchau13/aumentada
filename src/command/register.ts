@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import { Arg, Command, isStandaloneCmd } from "./types";
 import { commands } from "./commands";
-import { log, warn } from "../util";
+import { warn } from "../util";
 
 function translateCommand(cmd: Command): Discord.ApplicationCommandData {
     if (isStandaloneCmd(cmd)) {
@@ -60,8 +60,6 @@ async function handleCmdInvoke(
     interaction: Discord.CommandInteraction,
     options: DiscordOptionMap | undefined
 ) {
-    // console.log(cmd.name);
-    // console.dir(options, { depth: null });
     if (isStandaloneCmd(cmd)) {
         let args = parseArgs(cmd.args, options);
         await cmd.func(interaction, args);
