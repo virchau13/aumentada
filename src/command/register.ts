@@ -62,7 +62,13 @@ async function handleCmdInvoke(
 ) {
     if (isStandaloneCmd(cmd)) {
         let args = parseArgs(cmd.args, options);
-        await cmd.func(interaction, args);
+        try {
+            await cmd.func(interaction, args);
+        } catch(e) {
+            warn(
+                "Command failed with error:\n" + e.stack
+            );
+        }
     } else {
         // is a group command
         let chosen = options?.first();
