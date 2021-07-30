@@ -7,6 +7,8 @@ RUN apt-get -y update && apt-get install -y \
     fortune-mod \
     fortunes \
     && rm -rf /var/lib/apt/lists/* 
+# `fortune` is located at /usr/games/fortune by default.
+ENV PATH="/usr/games/:${PATH}"
 USER node
 RUN yarn
 COPY --chown=node:node . .
