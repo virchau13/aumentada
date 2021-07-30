@@ -34,4 +34,9 @@ client.on("error", async err => {
     error("Error event: " + err.toString());
 });
 
+client.on('guildCreate', async guild => {
+    await registerCmds(client);
+    log('Registered commands for new guild ' + guild.id);
+});
+
 client.login(process.env.BOT_TOKEN);
