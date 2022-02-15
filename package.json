@@ -7,20 +7,24 @@
     "author": "Vir Chaudhury <virchau13@hexular.net>",
     "license": "MIT",
     "dependencies": {
+        "@discordjs/builders": "^0.12.0",
+        "@discordjs/rest": "^0.3.0",
         "chalk": "^4.1.1",
-        "discord.js": "^13.0.0-dev.5ca97c9.1626480265",
+        "discord-api-types": "^0.27.1",
+        "discord.js": "^13.6.0",
         "dotenv": "^10.0.0",
         "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
         "@types/node": "^16.3.3",
+        "cargo-cp-artifact": "^0.1",
         "jest": "^27.0.6",
         "prettier": "^2.3.2",
         "ts-jest": "^27.0.3",
         "typescript": "^4.3.5"
     },
     "scripts": {
-        "build": "tsc",
+        "build": "mkdir -p dist && cargo-cp-artifact -nc dist/index.node -- cargo build --message-format=json-render-diagnostics && tsc",
         "start": "yarn build && node dist/index.js"
     }
 }

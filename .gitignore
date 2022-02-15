@@ -118,3 +118,6 @@ dist
 .pnp.*
 
 .env
+
+# rust 
+target/

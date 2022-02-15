@@ -1,14 +1,22 @@
 import "dotenv/config";
 import * as Discord from "discord.js";
-import { registerCmds } from "./command/register";
+import { REST } from "@discordjs/rest";
+import { register } from "./command/all";
 import { log, error } from "./util";
+
+const token = process.env.BOT_TOKEN;
+if (token == null) {
+    throw "no token specified";
+}
+
+const rest = new REST({ version: "9" }).setToken(token);
 
 const client = new Discord.Client({
     intents: [
         "GUILDS",
         // "GUILD_MEMBERS", (Privileged).
         "GUILD_BANS",
-        "GUILD_EMOJIS",
+        "GUILD_EMOJIS_AND_STICKERS",
         "GUILD_INTEGRATIONS",
         "GUILD_WEBHOOKS",
         "GUILD_INVITES",
@@ -25,18 +33,18 @@ const client = new Discord.Client({
 
 client.on("ready", async () => {
     log("Logged in as " + client.user?.tag);
-    await registerCmds(client).then(() => {
+    await register(client).then(() => {
         log("Commands registered");
     });
 });
 
-client.on("error", async err => {
+client.on("error", async (err) => {
     error("Error event: " + err.toString());
 });
 
-client.on('guildCreate', async guild => {
-    await registerCmds(client);
-    log('Registered commands for new guild ' + guild.id);
+client.on("guildCreate", async (guild) => {
+    await register(client);
+    log("Registered commands for new guild " + guild.id);
 });
 
-client.login(process.env.BOT_TOKEN);
+client.login(token);
