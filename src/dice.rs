@@ -445,7 +445,7 @@ pub fn eval(
                         if drop.keep == Keep::Low {
                             res.reverse();
                         }
-                        let tmp = res.iter().skip(repeat - keep_num - 1).sum();
+                        let tmp = res.iter().skip(repeat - keep_num).sum();
                         res.shuffle(rng);
                         tmp
                     }

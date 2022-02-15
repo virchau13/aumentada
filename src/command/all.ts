@@ -32,7 +32,7 @@ function parseArgs(
 ): any[] {
     return params.map((param, i) => {
         let arg = args[i];
-        if (param.type === arg.type && param.name === arg.name) {
+        if (arg && param.type === arg.type && param.name === arg.name) {
             return arg.value;
         } else {
             throw new InvalidCmdArg();
@@ -139,14 +139,19 @@ export async function register(client: Discord.Client) {
                         interaction,
                     );
                 } catch (e: any) {
-                    warn(
-                        "Invalid subcommand of `" +
-                            interaction.commandName +
-                            "`: `" +
-                            e.toString() +
-                            "`, ignoring\n"
-                            + e.stack
-                    );
+                    if(e instanceof InvalidCmdArg) {
+                        await interaction.deferReply({ ephemeral: true });
+                        await interaction.editReply("Invalid arguments to command");
+                    } else {
+                        warn(
+                            "Command parsing error" +
+                                interaction.commandName +
+                                "`: `" +
+                                e.toString() +
+                                "`, ignoring\n"
+                                + e.stack
+                        );
+                    }
                 }
             } else {
                 warn("Invalid command `" + interaction.commandName + "` invoked, ignoring");
